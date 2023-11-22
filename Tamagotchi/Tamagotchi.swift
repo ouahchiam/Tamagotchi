@@ -8,15 +8,47 @@
 import Foundation
 
 class Tamagotchi {
-    private var date: Date = Date()
-    private var hunger: Int = 0
-    private var bowels: Int = 0
-    private var age: Int = 0
-    private var weight: Double
-    private var disciplineMeter: Int = 100 // descending
-    private var attention = 0 // 100 being attention needed asap
-    private var health = 100
+    private var properties: [String: Double] = [
+        "hunger": 0,
+        "bowels": 0,
+        "age": 0,
+        "weight": 1,
+        "disciplineMeter": 100, // descending
+        "attention": 0,
+        "health": 100,
+    ]
+    let feedAmount: Double = 10
+    let disciplineAmount: Double = 20
+    private let debounces: [String: Double] = [ // debounce in seconds
+        "discipline" : 20,
+        "defecate" : 20,
+    ]
+    private var lastTriggered: [String: Double] = [
+        "discipline": Date()
+    ]
+    
     init(weight: Double) {
-        self.weight = weight
+        self.properties["weight"] = weight
+    }
+    
+    func returnDiff(date1: Date, date2: Date) -> Double {
+        return CFDateGetTimeIntervalSinceDate(date1, date2)
+    }
+    
+    func feed() {
+        if properties["hunger"]! > feedAmount {
+            properties["hunger"]! -= feedAmount
+        }
+        else {
+            properties["hunger"] = 0
+        }
+    }
+    
+    func defecate() {
+        properties["bowels"] = 2
+    }
+    
+    func discipline() {
+        properties["discipline"]! += disciplineAmount
     }
 }
